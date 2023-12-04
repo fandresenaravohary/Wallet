@@ -3,13 +3,13 @@ package models;
 import java.time.LocalDate;
 
 public class Transaction {
-    private String transactionId;
+    private int transactionId;
     private LocalDate date;
     private double amount;
     private String type;
     private String description;
 
-    public Transaction(String transactionId, LocalDate date, double amount, String type, String description) {
+    public Transaction(int transactionId, LocalDate date, double amount, String type, String description) {
         this.transactionId = transactionId;
         this.date = date;
         this.amount = amount;
@@ -17,11 +17,11 @@ public class Transaction {
         this.description = description;
     }
 
-    public String getTransactionId() {
+    public int getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(int transactionId) {
         this.transactionId = transactionId;
     }
 
