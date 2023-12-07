@@ -1,36 +1,42 @@
 package models;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
+enum TransactionType {
+    DEBIT,
+    CREDIT
+}
+
 public class Transaction {
-    private int transactionId;
-    private LocalDate date;
+    private int id;
+    private String label;
     private double amount;
-    private String type;
-    private String description;
+    private Date transactionDate;
+    private TransactionType type;
 
-    public Transaction(int transactionId, LocalDate date, double amount, String type, String description) {
-        this.transactionId = transactionId;
-        this.date = date;
+    public Transaction(int id, String label, double amount, Date transactionDate, TransactionType type) {
+        this.id = id;
+        this.label = label;
         this.amount = amount;
+        this.transactionDate = transactionDate;
         this.type = type;
-        this.description = description;
     }
 
-    public int getTransactionId() {
-        return transactionId;
+    public int getId() {
+        return id;
     }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getLabel() {
+        return label;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public double getAmount() {
@@ -41,30 +47,19 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getType() {
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "transactionId='" + transactionId + '\'' +
-                ", date=" + date +
-                ", amount=" + amount +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

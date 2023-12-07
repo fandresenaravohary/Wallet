@@ -1,18 +1,31 @@
 package models;
 
+import java.sql.Date;
+import java.util.List;
+
+enum AccountType {
+    BANK,
+    CASH,
+    MOBILE_MONEY
+}
+
 public class Account {
     private int id;
-    private String username;
-    private String password;
-    private String email;
+    private String name;
     private double balance;
+    private Date lastUpdateDate;
+    private List<Transaction> transactions;
+    private Currency currency;
+    private AccountType type;
 
-    public Account(int id, String username, String password, String email, double balance) {
+    public Account(int id, String name, double balance, Date lastUpdateDate, List<Transaction> transactions, Currency currency, AccountType type) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
+        this.name = name;
         this.balance = balance;
+        this.lastUpdateDate = lastUpdateDate;
+        this.transactions = transactions;
+        this.currency = currency;
+        this.type = type;
     }
 
     public int getId() {
@@ -23,28 +36,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getBalance() {
@@ -55,14 +52,48 @@ public class Account {
         this.balance = balance;
     }
 
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public AccountType getType() {
+        return type;
+    }
+
+    public void setType(AccountType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
                 ", balance=" + balance +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", transactions=" + transactions +
+                ", currency=" + currency +
+                ", type=" + type +
                 '}';
     }
 }
