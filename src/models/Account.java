@@ -90,4 +90,43 @@ public class Account {
                 ", type=" + type +
                 '}';
     }
+
+    public Account performTransaction(Transaction transaction) {
+        if (getType() == AccountType.BANK || getBalance() >= transaction.getAmount()) {
+            Transaction newTransaction = new Transaction(
+                    transaction.getId(),
+                    transaction.getLabel(),
+                    transaction.getAmount(),
+                    transaction.getTransactionDate(),
+                    transaction.getType()
+            );
+
+
+            // Ajout de la nouvelle transaction à la liste des transactions
+            getTransactions().add(newTransaction);
+
+            // Mise à jour du solde du compte
+            if (transaction.getType() == TransactionType.DEBIT) {
+                updateBalance(-transaction.getAmount());
+            } else {
+                updateBalance(transaction.getAmount());
+            }
+
+            return new Account(
+                    getId(),
+                    getName(),
+                    getBalance(),
+                    getLastUpdateDate(),
+                    getTransactions(),
+                    getCurrency(),
+                    getType()
+            );
+        } else {
+            System.out.println("Solde insuffisant pour effectuer la transaction.");
+            return this;
+        }
+    }
+    private void updateBalance(double amount) {
+        setBalance(getBalance() + amount);
+    }
 }
