@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
@@ -128,5 +129,47 @@ public class Account {
     }
     private void updateBalance(double amount) {
         setBalance(getBalance() + amount);
+    }
+
+    public double getBalanceAtDateTime(Date dateTime) {
+        double balance = 0.0;
+
+        // Supposez que transactions soit une liste des transactions du compte
+        for (Transaction transaction : transactions) {
+            // Vérifiez si la date de la transaction est antérieure à la date spécifiée
+            if (transaction.getTransactionDate().before(dateTime) || transaction.getTransactionDate().equals(dateTime)) {
+                // Mettez à jour le solde en fonction du type de transaction
+                if (transaction.getType() == TransactionType.CREDIT) {
+                    balance += transaction.getAmount();
+                } else if (transaction.getType() == TransactionType.DEBIT) {
+                    balance -= transaction.getAmount();
+                }
+            }
+        }
+
+        return balance;
+    }
+
+    public List<Double> getBalanceHistoryInDateTimeRange(Date startDateTime, Date endDateTime) {
+        List<Double> balanceHistory = new ArrayList<>();
+        double currentBalance = 0.0;
+
+        for (Transaction transaction : transactions) {
+            if ((transaction.getTransactionDate().after(startDateTime) || transaction.getTransactionDate().equals(startDateTime))
+                    && transaction.getTransactionDate().before(endDateTime)) {
+
+                // Mettez à jour le solde en fonction du type de transaction
+                if (transaction.getType() == TransactionType.CREDIT) {
+                    currentBalance += transaction.getAmount();
+                } else if (transaction.getType() == TransactionType.DEBIT) {
+                    currentBalance -= transaction.getAmount();
+                }
+
+                // Ajoutez le solde actuel à l'historique
+                balanceHistory.add(currentBalance);
+            }
+        }
+
+        return balanceHistory;
     }
 }
