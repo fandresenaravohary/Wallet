@@ -1,6 +1,7 @@
 package repository;
 
 import models.Transaction;
+import models.TransactionType;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,60 +11,19 @@ import java.util.List;
 public class TransactionRepository {
     private static final Connection connection = PostgresqlConnection.getConnection();
 
-    public TransactionRepository() {
-        initializeDatabase();
-    }
-
-    private void initializeDatabase() {
-        try (Statement statement = connection.createStatement()) {
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS transactions (" +
-                    "transaction_id SERIAL PRIMARY KEY," +
-                    "date DATE," +
-                    "amount DOUBLE PRECISION," +
-                    "type VARCHAR(255)," +
-                    "description VARCHAR(255))";
-            statement.execute(createTableQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void addTransaction(Transaction transaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO transactions (date, amount, type, description) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO transactions (label, amount, TransactionDate, type) VALUES (?, ?, ?, ?)")) {
 
-            preparedStatement.setDate(1, Date.valueOf(transaction.getDate()));
+            preparedStatement.setString(1, transaction.getLabel());
             preparedStatement.setDouble(2, transaction.getAmount());
-            preparedStatement.setString(3, transaction.getType());
-            preparedStatement.setString(4, transaction.getDescription());
+            preparedStatement.setDate(3, new java.sql.Date(transaction.getTransactionDate().getTime())); // Utilisation de java.sql.Date pour les dates SQL
+            preparedStatement.setString(4, String.valueOf(transaction.getType()));
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Transaction getTransactionById(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "SELECT * FROM transactions WHERE transaction_id = ?")) {
-
-            preparedStatement.setInt(1, id);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Transaction(
-                        resultSet.getInt("transaction_id"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getDouble("amount"),
-                        resultSet.getString("type"),
-                        resultSet.getString("description")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public List<Transaction> getAllTransactions() {
@@ -74,10 +34,10 @@ public class TransactionRepository {
             while (resultSet.next()) {
                 Transaction transaction = new Transaction(
                         resultSet.getInt("transaction_id"),
-                        resultSet.getDate("date").toLocalDate(),
+                        resultSet.getString("label"),
                         resultSet.getDouble("amount"),
-                        resultSet.getString("type"),
-                        resultSet.getString("description")
+                        resultSet.getDate("TransactionDate"),
+                        TransactionType.valueOf(resultSet.getString("type"))
                 );
                 transactions.add(transaction);
             }
@@ -87,15 +47,16 @@ public class TransactionRepository {
         return transactions;
     }
 
+
     public void updateTransaction(Transaction updatedTransaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE transactions SET date=?, amount=?, type=?, description=? WHERE transaction_id=?")) {
+                "UPDATE transactions SET label=?, amount=?, TransactionDate=?, type=? WHERE transaction_id=?")) {
 
-            preparedStatement.setDate(1, Date.valueOf(updatedTransaction.getDate()));
+            preparedStatement.setString(1, updatedTransaction.getLabel());
             preparedStatement.setDouble(2, updatedTransaction.getAmount());
-            preparedStatement.setString(3, updatedTransaction.getType());
-            preparedStatement.setString(4, updatedTransaction.getDescription());
-            preparedStatement.setInt(5, updatedTransaction.getTransactionId());
+            preparedStatement.setDate(3, new java.sql.Date(updatedTransaction.getTransactionDate().getTime()));
+            preparedStatement.setString(4, updatedTransaction.getType().toString());
+            preparedStatement.setInt(5, updatedTransaction.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -103,15 +64,5 @@ public class TransactionRepository {
         }
     }
 
-    public void deleteTransaction(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "DELETE FROM transactions WHERE transaction_id=?")) {
 
-            preparedStatement.setInt(1, id);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
