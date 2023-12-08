@@ -3,12 +3,6 @@ package models;
 import java.sql.Date;
 import java.util.List;
 
-enum AccountType {
-    BANK,
-    CASH,
-    MOBILE_MONEY
-}
-
 public class Account {
     private int id;
     private String name;

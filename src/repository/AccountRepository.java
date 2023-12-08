@@ -1,6 +1,6 @@
 package repository;
 
-import models.Account;
+import models.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,33 +9,15 @@ import java.util.List;
 public class AccountRepository {
     private static final Connection connection = PostgresqlConnection.getConnection();
 
-    public AccountRepository() {
-        initializeDatabase();
-    }
-
-    private void initializeDatabase() {
-        try (Connection connection = DriverManager.getConnection();
-             Statement statement = connection.createStatement()) {
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS accounts (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "username VARCHAR(255)," +
-                    "password VARCHAR(255)," +
-                    "email VARCHAR(255)," +
-                    "balance DOUBLE PRECISION)";
-            statement.execute(createTableQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void addAccount(Account newAccount) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO accounts (username, password, email, balance) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO Account (name, balance, last_update_date, currency, type) VALUES (?, ?, ?, ?, ?)")) {
 
-            preparedStatement.setString(1, newAccount.getUsername());
-            preparedStatement.setString(2, newAccount.getPassword());
-            preparedStatement.setString(3, newAccount.getEmail());
-            preparedStatement.setDouble(4, newAccount.getBalance());
+            preparedStatement.setString(1, newAccount.getName());
+            preparedStatement.setDouble(2, newAccount.getBalance());
+            preparedStatement.setDate(3, new Date(newAccount.getLastUpdateDate().getTime()));
+            preparedStatement.setString(4, newAccount.getCurrency().getCode().name());
+            preparedStatement.setString(5, newAccount.getType().name());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -43,10 +25,11 @@ public class AccountRepository {
         }
     }
 
+
     public Account getAccountById(int id) {
         Account account = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "SELECT * FROM accounts WHERE id=?")) {
+                "SELECT * FROM Account WHERE id=?")) {
 
             preparedStatement.setInt(1, id);
 
@@ -55,10 +38,12 @@ public class AccountRepository {
             if (resultSet.next()) {
                 account = new Account(
                         resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("password"),
-                        resultSet.getString("email"),
-                        resultSet.getDouble("balance")
+                        resultSet.getString("name"),
+                        resultSet.getDouble("balance"),
+                        resultSet.getDate("last_update_date"),
+                        getTransactionsForAccount(id),
+                        new Currency(resultSet.getInt("currency_id"), "Euro", CurrencyCode.EUR),
+                        AccountType.valueOf(resultSet.getString("type"))
                 );
             }
         } catch (SQLException e) {
@@ -67,18 +52,22 @@ public class AccountRepository {
         return account;
     }
 
+
     public List<Account> getAllAccounts() {
         List<Account> accounts = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM accounts")) {
 
             while (resultSet.next()) {
+                int accountId = resultSet.getInt("id");
                 Account account = new Account(
-                        resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("password"),
-                        resultSet.getString("email"),
-                        resultSet.getDouble("balance")
+                        accountId,
+                        resultSet.getString("name"),
+                        resultSet.getDouble("balance"),
+                        resultSet.getDate("last_update_date"),
+                        getTransactionsForAccount(accountId),
+                        new Currency(resultSet.getInt("currency_id"), "Euro", CurrencyCode.EUR),
+                        AccountType.valueOf(resultSet.getString("type"))
                 );
                 accounts.add(account);
             }
@@ -89,29 +78,29 @@ public class AccountRepository {
     }
 
 
-    public void updateAccount(Account updatedAccount) {
+
+    private List<Transaction> getTransactionsForAccount(int accountId) {
+        List<Transaction> transactions = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE accounts SET username=?, password=?, email=?, balance=? WHERE id=?")) {
+                "SELECT * FROM transactions WHERE account_id=?")) {
 
-            preparedStatement.setString(1, updatedAccount.getUsername());
-            preparedStatement.setString(2, updatedAccount.getPassword());
-            preparedStatement.setString(3, updatedAccount.getEmail());
-            preparedStatement.setDouble(4, updatedAccount.getBalance());
-            preparedStatement.setInt(5, updatedAccount.getId());
+            preparedStatement.setInt(1, accountId);
 
-            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Transaction transaction = new Transaction(
+                        resultSet.getInt("id"),
+                        resultSet.getString("label"),
+                        resultSet.getDouble("amount"),
+                        resultSet.getDate("transaction_date"),
+                        TransactionType.valueOf(resultSet.getString("type"))
+                );
+                transactions.add(transaction);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return transactions;
     }
-    public void deleteAccount(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "DELETE FROM accounts WHERE id=?")) {
-
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }    
 }

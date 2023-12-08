@@ -3,11 +3,6 @@ package models;
 import java.sql.Date;
 import java.time.LocalDate;
 
-enum TransactionType {
-    DEBIT,
-    CREDIT
-}
-
 public class Transaction {
     private int id;
     private String label;

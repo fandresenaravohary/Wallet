@@ -1,9 +1,5 @@
 package models;
 
-enum CurrencyCode {
-    EUR, // Euro
-    MGA // Ariary
-}
 public class Currency {
     private int id;
     private String name;
