@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: Votre API
+  version: 1.0.0
+
+paths:
+  /accounts:
+    get:
+      summary: Récupérer la liste des comptes
+      responses:
+        '200':
+          description: Liste des comptes récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Identifiant du compte
+        name:
+          type: string
+          description: Nom du compte
+        balance:
+          type: number
+          format: double
+          description: Solde du compte
+        lastUpdateDate:
+          type: string
+          format: date-time
+          description: Date de la dernière mise à jour
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: Liste des transactions associées au compte
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: Devise du compte
+        type:
+          $ref: '#/components/schemas/AccountType'
+          description: Type de compte
+
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Identifiant de la devise
+        name:
+          type: string
+          description: Nom de la devise
+        code:
+          $ref: '#/components/schemas/CurrencyCode'
+          description: Code de la devise
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Identifiant de la transaction
+        label:
+          type: string
+          description: Libellé de la transaction
+        amount:
+          type: number
+          format: double
+          description: Montant de la transaction
+        transactionDate:
+          type: string
+          format: date-time
+          description: Date de la transaction
+        type:
+          $ref: '#/components/schemas/TransactionType'
+          description: Type de transaction
+    TransactionType:
+        type: object
+    AccountType:
+      type: string
+      enum:
+        - Savings
+        - Checking
+
+    CurrencyCode:
+      type: string
