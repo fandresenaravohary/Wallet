@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS transaction (
-    transactionId SERIAL PRIMARY KEY,
-    date TIMESTAMP NOT NULL,
+    transaction_id SERIAL PRIMARY KEY,
+    transaction_date TIMESTAMP NOT NULL,
     amount DOUBLE PRECISION NOT NULL,
     type VARCHAR(10) NOT NULL,
-    description TEXT
+    label VARCHAR(255) NOT NULL
 );
+
