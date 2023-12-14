@@ -1,10 +1,10 @@
-package models;
-
-import repository.Env;
+package repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import models.TransferDetails;
 
 public class TransfertHistoryservice {
     public List<TransferDetails> getTransferHistoryByDateRange(Date startDate, Date endDate) {
