@@ -42,7 +42,11 @@ public class TransferDetails {
     
         for (TransferDetails transfer : allTransfers) {
             Date transferDate = transfer.getTransferDate();
-            // 
+            if (transferDate.after(startDate) || transferDate.equals(startDate)) {
+                if (transferDate.before(endDate) || transferDate.equals(endDate)) {
+                filteredTransfers.add(transfer);
+                }
+            }
         }
         
         return filteredTransfers;   
