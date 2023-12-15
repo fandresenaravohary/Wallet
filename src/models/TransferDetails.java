@@ -1,6 +1,8 @@
 package models;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransferDetails {
     private int id;
@@ -8,12 +10,6 @@ public class TransferDetails {
     private int IdCreditorTransaction;
     private Date transferDate;
 
-    public TransferDetails(int id, int idDebitorTransaction, int idCreditorTransaction, Date transferDate) {
-        this.id = id;
-        IdDebitorTransaction = idDebitorTransaction;
-        IdCreditorTransaction = idCreditorTransaction;
-        this.transferDate = transferDate;
-    }    
 
     public int getId() {
         return id;
@@ -40,5 +36,15 @@ public class TransferDetails {
         this.transferDate = transferDate;
     }
 
-
+    // Méthode pour obtenir l'historique des transferts dans une intervalle de date donnée
+    public static List<TransferDetails> getTransfersInDateRange(List<TransferDetails> allTransfers, Date startDate, Date endDate) {
+        List<TransferDetails> filteredTransfers = new ArrayList<>();
+    
+        for (TransferDetails transfer : allTransfers) {
+            Date transferDate = transfer.getTransferDate();
+            // 
+        }
+        
+        return filteredTransfers;   
+    }
 }
