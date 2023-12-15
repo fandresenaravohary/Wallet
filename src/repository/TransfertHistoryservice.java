@@ -29,10 +29,9 @@ public class TransfertHistoryservice {
                 while (resultSet.next()) {
                     TransferDetails entry = new TransferDetails(
                             resultSet.getInt("id"),
-                            resultSet.getString("debitor_username"),
-                            resultSet.getString("creditor_username"),
-                            resultSet.getTimestamp("transfer_date"),
-                            resultSet.getDouble("transfer_amount")
+                            resultSet.getInt("IdDebitorTransaction"),
+                            resultSet.getInt("IdCreditorTransaction"),
+                            resultSet.getDate("transferDate")
                     );
                     transferHistory.add(entry);
                 }
