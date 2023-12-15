@@ -99,7 +99,8 @@ public class Account {
                     transaction.getLabel(),
                     transaction.getAmount(),
                     transaction.getTransactionDate(),
-                    transaction.getType()
+                    transaction.getType(),
+                    transaction.getTransactionHour()
             );
 
 

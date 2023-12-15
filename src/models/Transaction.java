@@ -8,13 +8,15 @@ public class Transaction {
     private double amount;
     private Date transactionDate;
     private TransactionType type;
+    private int transactionHour;
 
-    public Transaction(int id, String label, double amount, Date transactionDate, TransactionType type) {
+    public Transaction(int id, String label, double amount, Date transactionDate, TransactionType type, int transactionHour) {
         this.id = id;
         this.label = label;
         this.amount = amount;
         this.transactionDate = transactionDate;
         this.type = type;
+        this.transactionHour = transactionHour;
     }
 
     public int getId() {
@@ -55,5 +57,13 @@ public class Transaction {
 
     public void setType(TransactionType type) {
         this.type = type;
+    }
+
+    public int getTransactionHour() {
+        return transactionHour;
+    }
+
+    public void setTransactionHour(int transactionHour) {
+        this.transactionHour = transactionHour;
     }
 }

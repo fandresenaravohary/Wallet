@@ -13,12 +13,13 @@ public class TransactionRepository {
 
     public void addTransaction(Transaction transaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO transactions (label, amount, TransactionDate, type) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO transactions (label, amount, TransactionDate, type, transactionHour) VALUES (?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, transaction.getLabel());
             preparedStatement.setDouble(2, transaction.getAmount());
-            preparedStatement.setDate(3, new java.sql.Date(transaction.getTransactionDate().getTime())); // Utilisation de java.sql.Date pour les dates SQL
+            preparedStatement.setDate(3, new java.sql.Date(transaction.getTransactionDate().getTime()));
             preparedStatement.setString(4, String.valueOf(transaction.getType()));
+            preparedStatement.setInt(5, transaction.getTransactionHour());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -37,7 +38,8 @@ public class TransactionRepository {
                         resultSet.getString("label"),
                         resultSet.getDouble("amount"),
                         resultSet.getDate("TransactionDate"),
-                        TransactionType.valueOf(resultSet.getString("type"))
+                        TransactionType.valueOf(resultSet.getString("type")),
+                        resultSet.getInt("transactionHour")
                 );
                 transactions.add(transaction);
             }
@@ -50,13 +52,14 @@ public class TransactionRepository {
 
     public void updateTransaction(Transaction updatedTransaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE transactions SET label=?, amount=?, TransactionDate=?, type=? WHERE transaction_id=?")) {
+                "UPDATE transactions SET label=?, amount=?, TransactionDate=?, type=?, transactionHour=? WHERE transaction_id=?")) {
 
             preparedStatement.setString(1, updatedTransaction.getLabel());
             preparedStatement.setDouble(2, updatedTransaction.getAmount());
             preparedStatement.setDate(3, new java.sql.Date(updatedTransaction.getTransactionDate().getTime()));
             preparedStatement.setString(4, updatedTransaction.getType().toString());
-            preparedStatement.setInt(5, updatedTransaction.getId());
+            preparedStatement.setInt(5, updatedTransaction.getTransactionHour());
+            preparedStatement.setInt(6, updatedTransaction.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
