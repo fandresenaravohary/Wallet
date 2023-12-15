@@ -51,4 +51,7 @@ public class TransferDetails {
         
         return filteredTransfers;   
     }
+    public String getAmount() {
+        return null;
+    }
 }
