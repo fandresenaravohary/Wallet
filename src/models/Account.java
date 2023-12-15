@@ -9,7 +9,7 @@ public class Account {
     private String name;
     private double balance;
     private Date lastUpdateDate;
-    private List<Transaction> transactions;
+    private static List<Transaction> transactions;
     private Currency currency;
     private AccountType type;
 
@@ -100,7 +100,8 @@ public class Account {
                     transaction.getAmount(),
                     transaction.getTransactionDate(),
                     transaction.getType(),
-                    transaction.getTransactionHour()
+                    transaction.getTransactionHour(),
+                    transaction.getCategory()
             );
 
 
@@ -151,8 +152,8 @@ public class Account {
         return balance;
     }
 
-    public List<Double> getBalanceHistoryInDateTimeRange(Date startDateTime, Date endDateTime) {
-        List<Double> balanceHistory = new ArrayList<>();
+    public static List<Transaction> getBalanceHistoryInDateTimeRange(Date startDateTime, Date endDateTime) {
+        List<Transaction> balanceHistory = new ArrayList<>();
         double currentBalance = 0.0;
 
         for (Transaction transaction : transactions) {
