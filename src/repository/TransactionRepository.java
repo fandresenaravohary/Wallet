@@ -1,5 +1,6 @@
 package repository;
 
+import models.Category;
 import models.Transaction;
 import models.TransactionType;
 
@@ -13,13 +14,14 @@ public class TransactionRepository {
 
     public void addTransaction(Transaction transaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO transactions (label, amount, TransactionDate, type, transactionHour) VALUES (?, ?, ?, ?, ?)")) {
+                "INSERT INTO transactions (label, amount, TransactionDate, type, transactionHour, category) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, transaction.getLabel());
             preparedStatement.setDouble(2, transaction.getAmount());
             preparedStatement.setDate(3, new java.sql.Date(transaction.getTransactionDate().getTime()));
             preparedStatement.setString(4, String.valueOf(transaction.getType()));
             preparedStatement.setInt(5, transaction.getTransactionHour());
+            preparedStatement.setString(6, String.valueOf(transaction.getCategory()));
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -39,7 +41,9 @@ public class TransactionRepository {
                         resultSet.getDouble("amount"),
                         resultSet.getDate("TransactionDate"),
                         TransactionType.valueOf(resultSet.getString("type")),
-                        resultSet.getInt("transactionHour")
+                        resultSet.getInt("transactionHour"),
+                        Category.valueOf(resultSet.getString("category"))
+
                 );
                 transactions.add(transaction);
             }

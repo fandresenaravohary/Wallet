@@ -9,14 +9,16 @@ public class Transaction {
     private Date transactionDate;
     private TransactionType type;
     private int transactionHour;
+    private Category category;
 
-    public Transaction(int id, String label, double amount, Date transactionDate, TransactionType type, int transactionHour) {
+    public Transaction(int id, String label, double amount, Date transactionDate, TransactionType type, int transactionHour, Category category) {
         this.id = id;
         this.label = label;
         this.amount = amount;
         this.transactionDate = transactionDate;
         this.type = type;
         this.transactionHour = transactionHour;
+        this.category = category;
     }
 
     public int getId() {
@@ -65,5 +67,26 @@ public class Transaction {
 
     public void setTransactionHour(int transactionHour) {
         this.transactionHour = transactionHour;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", amount=" + amount +
+                ", transactionDate=" + transactionDate +
+                ", type=" + type +
+                ", transactionHour=" + transactionHour +
+                ", category=" + category +
+                '}';
     }
 }

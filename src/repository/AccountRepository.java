@@ -94,7 +94,9 @@ public class AccountRepository {
                         resultSet.getString("label"),
                         resultSet.getDouble("amount"),
                         resultSet.getDate("transaction_date"),
-                        TransactionType.valueOf(resultSet.getString("type"))
+                        TransactionType.valueOf(resultSet.getString("type")),
+                        resultSet.getInt("transactionHour"),
+                        Category.valueOf(resultSet.getString("category"))
                 );
                 transactions.add(transaction);
             }
