@@ -97,27 +97,16 @@ public class TransferDetails {
     
         // Méthode à implémenter pour obtenir le montant en euro d'un transfert
         private double getEuroAmount(int debitorTransactionId) {
-            // Utilisez votre mécanisme spécifique pour obtenir le montant en Euro du transfert
-            // Exemple : supposons que le montant soit stocké dans une base de données
-            // Remplacez cette logique avec la vôtre
-            // return getAmountFromDatabase(debitorTransactionId);
             return 1.0; // Exemple : montant en Euro
         }
     
         // Méthode à implémenter pour obtenir le taux de change Euro to Ariary à une date donnée
         private double getEuroToAriaryRate(Date date) {
-            // Utilisez votre mécanisme spécifique pour obtenir le taux de change à la date spécifiée
-            // Exemple : supposons que les taux de change soient stockés dans une base de données
-            // Remplacez cette logique avec la vôtre
-            // return getRateFromDatabase(date);
             return 4600.0; // Exemple : taux de change
         }
     
         // Méthode à implémenter pour obtenir le montant de la dépense
         private double getExpenseAmount() {
-            // Exemple : supposons que le montant des dépenses soit stocké dans une base de données
-            // Remplacez cette logique avec la vôtre
-            // return getExpenseAmountFromDatabase();
             return 10000.0; // Exemple : montant de la dépense
         }
     
